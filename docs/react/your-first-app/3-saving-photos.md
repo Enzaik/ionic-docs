@@ -20,22 +20,21 @@ Next, create a couple of new functions in `usePhotoGallery`:
 export function usePhotoGallery() {
 
 
-const savePicture = async (photo: CameraPhoto, fileName: string): Promise<Photo> => {
-  const base64Data = await base64FromPath(photo.webPath!);
-  const savedFile = await FileSystem.writeFile({
-    path: fileName,
-    data: base64Data,
-    directory: Directory.Data
-  });
+  const savePicture = async (photo: any, fileName: string): Promise<UserPhoto> => {
+    const base64Data = await base64FromPath(photo.webPath!);
+    const savedFile = await Filesystem.writeFile({
+      path: fileName,
+      data: base64Data,
+      directory: Directory.Data,
+    });
 
-  // Use webPath to display the new image instead of base64 since it's
-  // already loaded into memory
-  return {
-    filepath: fileName,
-    webviewPath: photo.webPath
+    // Use webPath to display the new image instead of base64 since it's
+    // already loaded into memory
+    return {
+      filepath: fileName,
+      webviewPath: photo.webPath,
+    };
   };
-};
-}
 
 
 export async function base64FromPath(path: string): Promise<string> {
@@ -48,7 +47,7 @@ export async function base64FromPath(path: string): Promise<string> {
       if (typeof reader.result === 'string') {
         resolve(reader.result);
       } else {
-        reject('method did not return a string')
+        reject('method did not return a string');
       }
     };
     reader.readAsDataURL(blob);
